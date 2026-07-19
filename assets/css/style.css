@@ -23,3 +23,12 @@
   color: #0f172a;
   transform: translateY(-3px);
 }
+
+
+.brand-logo {
+  display: block;
+  width: 145px;
+  height: 56px;
+  object-fit: contain;
+  object-position: left center;
+}
