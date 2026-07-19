@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   note.textContent = 'Sending your request…';
 
   const payload = new URLSearchParams(new FormData(form));
-  payload.append('source', 'RAJ HOMES website');
+  payload.append('source', 'Investors Banyan website');
 
   try {
     await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
