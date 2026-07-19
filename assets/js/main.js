@@ -1,4 +1,7 @@
 /* RAJ HOMES — lightweight UI interactions, no dependencies */
+// Paste your Google Apps Script Web App URL here after deployment.
+const GOOGLE_SHEETS_WEB_APP_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+
 document.addEventListener('DOMContentLoaded', () => {
   const $ = (selector, context = document) => context.querySelector(selector);
   const $$ = (selector, context = document) => [...context.querySelectorAll(selector)];
@@ -24,8 +27,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const emi = (p * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
     $('#emi-result').innerHTML = `${new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(emi)} <small>estimated monthly EMI</small>`;
   });
+
   $('#search-form').addEventListener('submit', event => { event.preventDefault(); document.querySelector('#projects').scrollIntoView({ behavior: 'smooth' }); });
-  $('#lead-form').addEventListener('submit', event => { event.preventDefault(); $('#form-note').textContent = 'Thank you — an advisor will contact you shortly.'; event.target.reset(); });
+  
+  $('#lead-form').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const note = $('#form-note');
+  const submit = $('button[type="submit"]', form);
+
+  if (GOOGLE_SHEETS_WEB_APP_URL.includes('PASTE_YOUR')) {
+    note.textContent =
+      'Google Sheets is not connected yet. Add your Web App URL in assets/js/main.js.';
+    return;
+  }
+
+  submit.disabled = true;
+  note.textContent = 'Sending your request…';
+
+  const payload = new URLSearchParams(new FormData(form));
+  payload.append('source', 'RAJ HOMES website');
+
+  try {
+    await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: payload
+    });
+
+    note.textContent = 'Thank you — an advisor will contact you shortly.';
+    form.reset();
+  } catch (error) {
+    note.textContent = 'We could not send your request. Please call us directly.';
+  } finally {
+    submit.disabled = false;
+  }
+});
 
   $$('.filter-buttons button').forEach(button => button.addEventListener('click', () => { $$('.filter-buttons button').forEach(item => item.classList.remove('active')); button.classList.add('active'); const type = button.dataset.filter; $$('.gallery-item').forEach(item => item.hidden = type !== 'all' && !item.classList.contains(type)); }));
   const lightbox = $('.lightbox'); $$('.gallery-item').forEach(item => item.addEventListener('click', () => { $('img', lightbox).src = $('img', item).src; $('img', lightbox).alt = $('img', item).alt; $('p', lightbox).textContent = item.dataset.caption; lightbox.classList.add('open'); lightbox.setAttribute('aria-hidden', 'false'); }));
