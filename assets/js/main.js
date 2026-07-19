@@ -1,6 +1,6 @@
 /* RAJ HOMES — lightweight UI interactions, no dependencies */
 // Paste your Google Apps Script Web App URL here after deployment.
-const GOOGLE_SHEETS_WEB_APP_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxIRcm2K5HC-9OgpcuhLGhp287_4So0o9tp0z9R19uRwpd0yFS7yEFNEooD3jMAn4Q_/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
   const $ = (selector, context = document) => context.querySelector(selector);
